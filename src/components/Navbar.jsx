@@ -23,7 +23,7 @@ const Navbar = () => {
       : "text-gray-700 hover:text-blue-600 transition";
 
   return (
-    <header className="bg-white border-b  top-0 z-50 shadow-sm relative">
+    <header className="bg-gray-200 border-b  top-0 z-50 shadow-sm relative">
       <div className="max-w-7xl mx-auto px-5">
         <div className="h-16 flex items-center justify-between">
           {/* Logo */}
@@ -93,7 +93,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {menuOpen && (
-          <div className="md:hidden absolute top-full mt-.5 px-2 py-4 right-4  w-40  text-center bg-gray-400 rounded-xl border-0 shadow-xl p-5 animate-up fade-out">
+          <div className="md:hidden absolute top-full mt-2 px-2 py-4 right-4  w-45  text-center bg-gray-200 rounded-xl border-0 shadow-2xl p-3 animate-up fade-out">
             {selectedUser ? (
               <>
                 <div className="mb-4 pb-4 border-b">
