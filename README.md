@@ -1,16 +1,69 @@
-# React + Vite
+# 🏢 Meeting Room Booking System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based application for managing meeting room reservations with role-based access control and booking validation.
 
-Currently, two official plugins are available:
+## 📋 Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The Meeting Room Booking System allows users to create and manage meeting room bookings while preventing scheduling conflicts and enforcing permissions based on user roles.
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Booking Management
 
-## Expanding the ESLint configuration
+- Create bookings
+- View all bookings
+- Delete bookings based on permissions
+- Prevent overlapping reservations
+- Validate booking date and time ranges
+- Display clear validation and permission messages
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### User Roles
+
+#### User
+
+- Create bookings
+- View bookings
+- Delete own bookings
+
+#### Owner
+
+- Create bookings
+- View bookings
+- Delete any booking
+- View booking summaries
+- View bookings grouped by user
+
+#### Admin
+
+- Manage users
+- Create users
+- Delete users
+- Change user roles
+- View all users
+- View all bookings
+- Delete any booking
+
+## 📌 Booking Rules
+
+- Start time must be before end time
+- Bookings cannot overlap
+- Identical booking ranges are not allowed
+- Partial overlaps are not allowed
+- Nested bookings are not allowed
+- Back-to-back bookings are allowed
+
+## 🛠️ Built With
+
+- React
+- Vite
+- Tailwind CSS
+- React Router DOM
+- Axios
+- Chart.js
+
+## 🚀 Getting Started
+
+### Clone Repository
+
+```bash
+https://github.com/98chawbelar/client.git
