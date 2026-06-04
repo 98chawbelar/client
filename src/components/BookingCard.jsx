@@ -11,7 +11,7 @@ const BookingCard = ({ booking, fetchBookings }) => {
 
   const isOwner = selectedUser?.role === "OWNER";
 
-  const isBookingOwner = booking.userId._id === selectedUser?._id;
+  const isBookingOwner = booking?.userId?._id === selectedUser?._id;
 
   const canDelete = isAdmin || isOwner || isBookingOwner;
 
@@ -33,9 +33,9 @@ const BookingCard = ({ booking, fetchBookings }) => {
     <div className="bg-white p-5 rounded-2xl border">
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="font-bold text-lg">{booking.userId.name}</h2>
+          <h2 className="font-bold text-lg">{booking.userId?.name}</h2>
 
-          <p className="text-blue-600 text-sm">{booking.userId.role}</p>
+          <p className="text-blue-600 text-sm">{booking.userId?.role}</p>
         </div>
 
         {canDelete && (

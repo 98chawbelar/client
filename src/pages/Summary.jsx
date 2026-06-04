@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-
 import api from "../api/axios";
 import { useAuth } from "../hooks/useAuth";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Summary = () => {
   const { selectedUser } = useAuth();
@@ -53,9 +56,58 @@ const Summary = () => {
 
   const totalUsers = summary.length;
 
-  const leaderboard = [...summary].sort(
-    (a, b) => b.totalBookings - a.totalBookings,
-  );
+  const leaderboard = [...summary].sort((a, b) => {
+    const priority = {
+      ADMIN: 1,
+      OWNER: 2,
+      USER: 3,
+    };
+
+    const aPriority = priority[a.role];
+    const bPriority = priority[b.role];
+
+    if (aPriority !== bPriority) {
+      return aPriority - bPriority;
+    }
+
+    return b.totalBookings - a.totalBookings;
+  });
+
+  const pieData = {
+    labels: leaderboard.map((item) => item.userName),
+    datasets: [
+      {
+        label: "Bookings",
+        data: leaderboard.map((item) => item.totalBookings),
+        backgroundColor: [
+          "#EF4444",
+          "#8B5CF6",
+          "#3B82F6",
+          "#10B981",
+          "#F59E0B",
+          "#06B6D4",
+          "#EC4899",
+          "#84CC16",
+          "#14B8A6",
+          "#F97316",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const pieOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "bottom",
+      },
+      title: {
+        display: true,
+        text: "Bookings Distribution By User",
+      },
+    },
+  };
 
   return (
     <div>
@@ -86,33 +138,12 @@ const Summary = () => {
             </div>
           </div>
 
-          {/* Leaderboard */}
-          <div className="bg-white rounded-2xl hover:shadow-2xl p-6 shadow-xl mb-8">
-            <h2 className="text-2xl font-bold mb-6">Booking Leaderboard</h2>
+          {/* Pie Chart */}
+          <div className="bg-white rounded-2xl shadow-xl p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-6">Booking Distribution</h2>
 
-            <div className="space-y-4">
-              {leaderboard.map((user, index) => (
-                <div
-                  key={user._id}
-                  className="flex items-center justify-between  border-b pb-4 last:border-b-0"
-                >
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      #{index + 1} {user.userName}
-                    </h3>
-
-                    <p className="text-gray-500 text-sm">{user.role}</p>
-                  </div>
-
-                  <div className="text-right">
-                    <h3 className="text-3xl font-bold text-blue-600">
-                      {user.totalBookings}
-                    </h3>
-
-                    <p className="text-gray-500 text-sm">bookings</p>
-                  </div>
-                </div>
-              ))}
+            <div className="max-w-xl mx-auto">
+              <Pie data={pieData} options={pieOptions} />
             </div>
           </div>
 
@@ -143,7 +174,15 @@ const Summary = () => {
                     <td className="p-4 font-medium">{item.userName}</td>
 
                     <td className="p-4">
-                      <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm ${
+                          item.role === "ADMIN"
+                            ? "bg-red-100 text-red-700"
+                            : item.role === "OWNER"
+                              ? "bg-purple-100 text-purple-700"
+                              : "bg-blue-100 text-blue-700"
+                        }`}
+                      >
                         {item.role}
                       </span>
                     </td>
