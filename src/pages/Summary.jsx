@@ -187,7 +187,9 @@ const Summary = () => {
                       </span>
                     </td>
 
-                    <td className="p-4 font-bold">{item.totalBookings}</td>
+                    <td className="p-4 font-bold text-center">
+                      {item.totalBookings}
+                    </td>
                   </tr>
                 ))}
               </tbody>

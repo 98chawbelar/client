@@ -17,6 +17,8 @@ const Users = () => {
 
   const [deletingId, setDeletingId] = useState(null);
 
+  const [updatingId, setUpdatingId] = useState(null);
+
   const [name, setName] = useState("");
 
   const [role, setRole] = useState("USER");
@@ -107,6 +109,33 @@ const Users = () => {
     }
   };
 
+  // update role
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      setUpdatingId(id);
+
+      await api.patch(
+        `/users/${id}/role`,
+        {
+          role: newRole,
+        },
+        {
+          headers: {
+            "x-user-id": selectedUser._id,
+          },
+        },
+      );
+
+      await fetchUsers();
+    } catch (error) {
+      console.log(error);
+
+      alert(error?.response?.data?.message || "Failed to update role");
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
   // delete user
   const handleDeleteUser = async (id) => {
     if (id === selectedUser?._id) {
@@ -143,6 +172,8 @@ const Users = () => {
     return (
       <div className="text-center py-20">
         <h2 className="text-3xl font-bold">Access Denied</h2>
+
+        <p className="text-gray-500 mt-2">Only Admin can manage users.</p>
       </div>
     );
   }
@@ -210,13 +241,46 @@ const Users = () => {
                   <div>
                     <h2 className="font-bold text-lg">{user.name}</h2>
 
-                    <p className="text-blue-600 font-medium">{user.role}</p>
+                    <select
+                      value={user.role}
+                      disabled={
+                        user._id === selectedUser?._id ||
+                        updatingId === user._id
+                      }
+                      onChange={(e) =>
+                        handleRoleChange(user._id, e.target.value)
+                      }
+                      className="mt-2 border rounded-lg px-3 py-2"
+                    >
+                      <option value="USER">USER</option>
+
+                      <option value="OWNER">OWNER</option>
+
+                      <option value="ADMIN">ADMIN</option>
+                    </select>
                   </div>
 
                   <button
                     onClick={() => handleDeleteUser(user._id)}
-                    disabled={deletingId === user._id}
-                    className="bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white px-4 py-2 rounded-lg transition cursor-pointer"
+                    disabled={
+                      deletingId === user._id ||
+                      user.role === "ADMIN" ||
+                      user._id === selectedUser?._id
+                    }
+                    title={
+                      user.role === "ADMIN"
+                        ? "Admin users cannot be deleted"
+                        : user._id === selectedUser?._id
+                          ? "You cannot delete yourself"
+                          : ""
+                    }
+                    className={`px-4 py-2 rounded-lg text-white transition
+                      ${
+                        user.role === "ADMIN" || user._id === selectedUser?._id
+                          ? "bg-gray-300 cursor-not-allowed"
+                          : "bg-red-500 hover:bg-red-600 cursor-pointer"
+                      }
+                    `}
                   >
                     {deletingId === user._id ? "Deleting..." : "Delete"}
                   </button>
